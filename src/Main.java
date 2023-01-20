@@ -1,3 +1,4 @@
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 class Agencia{
@@ -42,32 +43,42 @@ class Banco {
 
     public void removerAgencia(int numero){
         boolean foiEncontrado = false;
-        for (int i = 0; i < agencias.length && agencias[i] != null; i++){
-            if (agencias[i].getNumero() == numero){
-                foiEncontrado = true;
-                for (int j = i; agencias[j] != null; j++){
-                    agencias[j] = agencias[j+1];
+        for (int i = 0; i < agencias.length; i++){
+            if (agencias[i] != null) {
+                if (agencias[i].getNumero() == numero) {
+                    int j;
+                    foiEncontrado = true;
+                    for (j = i; j < agencias.length - 1; j++) {
+                        agencias[j] = agencias[j + 1];
+                    }
+                    agencias[j] = null;
                 }
+            }
+            else {
+                break;
             }
         }
         if (foiEncontrado == false){
             System.out.println("Numero nao encontrado");
         }
+
     }
 
     public void listarAgencias(){
         System.out.println("----AGENCIAS----");
         System.out.println();
         if (agencias[0] != null) {
-            for (int i = 0;i < agencias.length && agencias[i] != null; i++) {
-                System.out.println((i + 1) + ". " + agencias[i].getNome() + " - " + agencias[i].getNumero());
-                System.out.println();
+            for (int i = 0;i < agencias.length; i++) {
+                if (agencias[i] != null) {
+                    System.out.println((i + 1) + ". " + agencias[i].getNome() + " - " + agencias[i].getNumero());
+                    System.out.println();
+                }
             }
         }
     }
 
     public Agencia selecionarAgencia(int numero){
-        for (int i = 0; agencias[i+1] != null; i++){
+        for (int i = 0; i < agencias.length; i++){
             if (agencias[i].getNumero() == numero){
                 return agencias[i];
             }
@@ -79,10 +90,10 @@ class Banco {
         int i;
         for (i = 0; i < agencias.length; i++){
             if (agencias[i] == null){
-                break;
+                return i;
             }
         }
-        return i;
+        return i+1;
     }
 
     public String getNome() {
@@ -114,7 +125,8 @@ public class Main{
             try {
                 num = s.nextInt();
             }
-            catch (NumberFormatException e){
+            catch (InputMismatchException e){
+                s.nextLine();
                 System.out.println("Insira um valor válido");
                 System.out.println();
                 continue;
