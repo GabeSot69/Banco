@@ -1,14 +1,99 @@
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
+class Conta{
+    private int numero;
+    private String nomeTitular;
+    private double saldo = 0;
+
+    Conta(int numero, String nomeTitular){
+        this.numero = numero;
+        this.nomeTitular = nomeTitular;
+        this.saldo = 0;
+    }
+
+    public int getNumero() {
+        return numero;
+    }
+
+    public void setNumero(int numero) {
+        this.numero = numero;
+    }
+
+    public String getNomeTitular() {
+        return nomeTitular;
+    }
+
+    public void setNomeTitular(String nomeTitular) {
+        this.nomeTitular = nomeTitular;
+    }
+}
 class Agencia{
     private int numero;
     private String nome;
+    private Conta[] contas;
 
     Agencia(int numero, String nome){
         this.numero = numero;
         this.nome = nome;
+        this.contas = new Conta[10];
     }
+
+    public void criarConta(int numero, String nomeTitular){
+        Conta conta = new Conta(numero,nomeTitular);
+        for (int i = 0; i < contas.length; i++){
+            if (contas[i] == null){
+                contas[i] = conta;
+                break;
+            }
+        }
+
+    }
+
+    public void removerConta(int numero){
+        boolean foiEncontrado = false;
+        for (int i = 0; i < contas.length; i++){
+            if (contas[i] != null) {
+                if (contas[i].getNumero() == numero) {
+                    int j;
+                    foiEncontrado = true;
+                    for (j = i; j < contas.length - 1; j++) {
+                        contas[j] = contas[j + 1];
+                    }
+                    contas[j] = null;
+                }
+            }
+            else {
+                break;
+            }
+        }
+        if (foiEncontrado == false){
+            System.out.println("Numero nao encontrado");
+        }
+    }
+
+    public void listarContas(){
+        System.out.println("----CONTAS----");
+        System.out.println();
+        if (contas[0] != null) {
+            for (int i = 0;i < contas.length; i++) {
+                if (contas[i] != null) {
+                    System.out.println((i + 1) + ". " + contas[i].getNomeTitular() + " - " + contas[i].getNumero());
+                    System.out.println();
+                }
+            }
+        }
+    }
+
+    public Conta selecionarConta(int numero){
+        for (int i = 0; i < contas.length; i++){
+            if (contas[i].getNumero() == numero){
+                return contas[i];
+            }
+        }
+        return null;
+    }
+
 
     public int getNumero() {
         return numero;
@@ -22,10 +107,11 @@ class Agencia{
 
 class Banco {
     private String nome;
-    private Agencia[] agencias = new Agencia[10];
+    private Agencia[] agencias;
 
     public Banco(String nome) {
         this.nome = nome;
+        this.agencias = new Agencia[10];
     }
 
     public void criarAgencia(int numero, String nome){
@@ -121,7 +207,7 @@ public class Main{
             System.out.println("3. Listar agencias");
             System.out.println("4. Selecionar agencia");
             System.out.println("5. Sair");
-            System.out.print("Insira um valor: ");
+           
             try {
                 num = s.nextInt();
             }
