@@ -4,7 +4,7 @@ import java.util.Scanner;
 class Conta{
     private int numero;
     private String nomeTitular;
-    private double saldo = 0;
+    private double saldo;
 
     Conta(int numero, String nomeTitular){
         this.numero = numero;
@@ -207,7 +207,7 @@ public class Main{
             System.out.println("3. Listar agencias");
             System.out.println("4. Selecionar agencia");
             System.out.println("5. Sair");
-           
+
             try {
                 num = s.nextInt();
             }
@@ -248,6 +248,21 @@ public class Main{
                     Icomp.listarAgencias();
                     break;
                 case 4:
+                    System.out.println("Digite o numero da agencia");
+                    int numero = s.nextInt();
+                    Agencia agenciaSelecionada = Icomp.selecionarAgencia(numero);
+                    if (agenciaSelecionada == null){
+                        System.out.println("Numero nao encontrado, operacao cancelada");
+                    }
+                    else {
+                        System.out.println("----Menu da Agencia - "+ agenciaSelecionada.getNome() + "----");
+                        System.out.println();
+                        System.out.println("1. Criar conta");
+                        System.out.println("2. Remover conta");
+                        System.out.println("3. Listar contas");
+                        System.out.println("4. Selecionar conta");
+                        System.out.println("5. Sair");
+                    }
                     break;
                 case 5:
                     System.out.println("Volte Sempre :)");
