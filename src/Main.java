@@ -94,6 +94,15 @@ class Agencia{
         return null;
     }
 
+    public int contarContas(){
+        int i;
+        for (i = 0; i < contas.length; i++){
+            if (contas[i] == null){
+                return i;
+            }
+        }
+        return i+1;
+    }
 
     public int getNumero() {
         return numero;
@@ -165,8 +174,10 @@ class Banco {
 
     public Agencia selecionarAgencia(int numero){
         for (int i = 0; i < agencias.length; i++){
-            if (agencias[i].getNumero() == numero){
-                return agencias[i];
+            if (agencias[i] != null) {
+                if (agencias[i].getNumero() == numero) {
+                    return agencias[i];
+                }
             }
         }
         return null;
@@ -249,19 +260,71 @@ public class Main{
                     break;
                 case 4:
                     System.out.println("Digite o numero da agencia");
-                    int numero = s.nextInt();
-                    Agencia agenciaSelecionada = Icomp.selecionarAgencia(numero);
+                    int numeroAgencia = s.nextInt();
+                    Agencia agenciaSelecionada = Icomp.selecionarAgencia(numeroAgencia);
                     if (agenciaSelecionada == null){
                         System.out.println("Numero nao encontrado, operacao cancelada");
                     }
                     else {
-                        System.out.println("----Menu da Agencia - "+ agenciaSelecionada.getNome() + "----");
-                        System.out.println();
-                        System.out.println("1. Criar conta");
-                        System.out.println("2. Remover conta");
-                        System.out.println("3. Listar contas");
-                        System.out.println("4. Selecionar conta");
-                        System.out.println("5. Sair");
+                        int escolhaConta = 0;
+                        while (escolhaConta != 5) {
+                            System.out.println("----Menu da Agencia - " + agenciaSelecionada.getNome() + "----");
+                            System.out.println();
+                            System.out.println("1. Criar conta");
+                            System.out.println("2. Remover conta");
+                            System.out.println("3. Listar contas");
+                            System.out.println("4. Selecionar conta");
+                            System.out.println("5. Voltar");
+                            try {
+                                escolhaConta = s.nextInt();
+                            }
+                            catch (InputMismatchException e){
+                                s.nextLine();
+                                System.out.println("Insira um valor válido");
+                                System.out.println();
+                                continue;
+                            }
+                            switch (escolhaConta){
+                                case 1:
+                                    if (agenciaSelecionada.contarContas() <= 10) {
+                                        System.out.println("Digite o nome do titular");
+                                        s.nextLine();
+                                        String nomeTitular = s.nextLine();
+                                        System.out.println("Digite o numero da conta");
+                                        int numeroConta = s.nextInt();
+                                        agenciaSelecionada.criarConta(numeroConta,nomeTitular);
+                                        System.out.println("Operacao Concluida");
+                                    }
+                                    else {
+                                        System.out.println("Capacidade máxima alcançada");
+                                    }
+                                    break;
+                                case 2:
+                                    if (agenciaSelecionada.contarContas()== 0){
+                                        System.out.println("Não é possível remover, lista vazia");
+                                    }
+                                    else {
+                                        System.out.println("Digite o numero da conta");
+                                        int numeroConta = s.nextInt();
+                                        agenciaSelecionada.removerConta(numeroConta);
+                                        System.out.println("Operacao Concluida");
+                                        s.nextLine();
+                                    }
+                                    break;
+                                case 3:
+                                    agenciaSelecionada.listarContas();
+                                    break;
+                                case 4:
+                                    break;
+                                case 5:
+                                    break;
+                                default:
+                                    System.out.println("Opcao nao encontrada");
+                                    break;
+                            }
+                            System.out.println();
+
+                        }
                     }
                     break;
                 case 5:
