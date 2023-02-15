@@ -87,8 +87,10 @@ class Agencia{
 
     public Conta selecionarConta(int numero){
         for (int i = 0; i < contas.length; i++){
-            if (contas[i].getNumero() == numero){
-                return contas[i];
+            if (contas[i] != null) {
+                if (contas[i].getNumero() == numero) {
+                    return contas[i];
+                }
             }
         }
         return null;
