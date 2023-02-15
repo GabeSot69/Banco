@@ -3,29 +3,46 @@ import java.util.Scanner;
 
 class Conta{
     private int numero;
-    private String nomeTitular;
+    private String nome;
     private double saldo;
 
-    Conta(int numero, String nomeTitular){
+    Conta(int numero, String nome){
         this.numero = numero;
-        this.nomeTitular = nomeTitular;
+        this.nome = nome;
         this.saldo = 0;
     }
+
+    public void depositar(double valor){
+        this.saldo += valor;
+    }
+
+    public void sacar(double valor) throws IllegalArgumentException{
+        if (valor <= 0 || valor > this.saldo){
+            throw new IllegalArgumentException("Valor invalido, operacao cancelada");
+        }
+        this.saldo -= valor;
+    }
+
+    public void transferir(Conta contaDestino, double valor) throws IllegalArgumentException{
+        if (valor <= 0 || valor > this.saldo){
+            throw new IllegalArgumentException("Valor invalido, operacao cancelada");
+        }
+        this.saldo -= valor;
+        contaDestino.saldo += valor;
+    }
+
+
 
     public int getNumero() {
         return numero;
     }
 
-    public void setNumero(int numero) {
-        this.numero = numero;
+    public String getNome() {
+        return nome;
     }
 
-    public String getNomeTitular() {
-        return nomeTitular;
-    }
-
-    public void setNomeTitular(String nomeTitular) {
-        this.nomeTitular = nomeTitular;
+    public double getSaldo() {
+        return saldo;
     }
 }
 class Agencia{
@@ -39,8 +56,8 @@ class Agencia{
         this.contas = new Conta[10];
     }
 
-    public void criarConta(int numero, String nomeTitular){
-        Conta conta = new Conta(numero,nomeTitular);
+    public void criarConta(int numero, String nome){
+        Conta conta = new Conta(numero,nome);
         for (int i = 0; i < contas.length; i++){
             if (contas[i] == null){
                 contas[i] = conta;
@@ -78,7 +95,7 @@ class Agencia{
         if (contas[0] != null) {
             for (int i = 0;i < contas.length; i++) {
                 if (contas[i] != null) {
-                    System.out.println((i + 1) + ". " + contas[i].getNomeTitular() + " - " + contas[i].getNumero());
+                    System.out.println((i + 1) + ". " + contas[i].getNome() + " - " + contas[i].getNumero());
                     System.out.println();
                 }
             }
@@ -317,6 +334,81 @@ public class Main{
                                     agenciaSelecionada.listarContas();
                                     break;
                                 case 4:
+                                    System.out.println("Digite o numero da conta");
+                                    int numeroConta = s.nextInt();
+                                    Conta contaSelecionada = agenciaSelecionada.selecionarConta(numeroConta);
+                                    if (contaSelecionada == null){
+                                        System.out.println("Numero nao encontrado, opcao cancelada");
+                                    }
+                                    else {
+                                        int escolhaOperacao = 0;
+                                        while (escolhaOperacao != 5) {
+                                            System.out.println("----Menu da Conta - " + contaSelecionada.getNome() + "----");
+                                            System.out.println();
+                                            System.out.println("1. Depositar");
+                                            System.out.println("2. Sacar");
+                                            System.out.println("3. Transferir");
+                                            System.out.println("4. Ver saldo");
+                                            System.out.println("5. Voltar");
+                                            try {
+                                                escolhaOperacao = s.nextInt();
+                                            }
+                                            catch (InputMismatchException e){
+                                                s.nextLine();
+                                                System.out.println("Insira um valor valido");
+                                                System.out.println();
+                                                continue;
+                                            }
+                                            switch (escolhaOperacao){
+                                                case 1:
+                                                    System.out.println("Insira o valor que deseja depositar");
+                                                    double valorDeposito = s.nextDouble();
+                                                    contaSelecionada.depositar(valorDeposito);
+                                                    System.out.println("Operacao Concluida");
+                                                    break;
+                                                case 2:
+                                                    System.out.println("Insira o valor que deseja sacar");
+                                                    double valorSaque = s.nextDouble();
+                                                    try {
+                                                        contaSelecionada.sacar(valorSaque);
+                                                        System.out.println("Operacao concluida");
+                                                    }
+                                                    catch (IllegalArgumentException e){
+                                                        System.out.println(e.getMessage());
+                                                    }
+                                                    break;
+                                                case 3:
+                                                    System.out.println("Insira o numero da conta que deseja transferir");
+                                                    int numeroContaDestino = s.nextInt();
+                                                    Conta contaDestino = agenciaSelecionada.selecionarConta(numeroContaDestino);
+                                                    if (contaDestino == null){
+                                                        System.out.println("Numero nao encontrado, operacao cancelada");
+                                                    }
+                                                    else {
+                                                        System.out.println("Insira o valor que deseja transferir");
+                                                        double valorTransferencia = s.nextDouble();
+                                                        try {
+                                                            contaSelecionada.transferir(contaDestino,valorTransferencia);
+                                                            System.out.println("Operacao concluida");
+                                                        }
+                                                        catch (IllegalArgumentException e){
+                                                            System.out.println(e.getMessage());
+                                                        }
+                                                    }
+                                                    break;
+                                                case 4:
+                                                    System.out.print("Nome - " + contaSelecionada.getNome() + " | Numero da conta - " + contaSelecionada.getNumero() + " | Saldo - ");
+                                                    System.out.printf("%.2f", contaSelecionada.getSaldo());
+                                                    break;
+                                                case 5:
+                                                    break;
+                                                default:
+                                                    System.out.println("Opcao nao encontrada");
+                                                    break;
+                                            }
+                                            System.out.println();
+                                        }
+                                    }
                                     break;
                                 case 5:
                                     break;
