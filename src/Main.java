@@ -398,7 +398,7 @@ public class Main{
                                                     break;
                                                 case 4:
                                                     System.out.print("Nome - " + contaSelecionada.getNome() + " | Numero da conta - " + contaSelecionada.getNumero() + " | Saldo - ");
-                                                    System.out.printf("%.2f", contaSelecionada.getSaldo());
+                                                    System.out.printf("%.2f\n", contaSelecionada.getSaldo());
                                                     break;
                                                 case 5:
                                                     break;
